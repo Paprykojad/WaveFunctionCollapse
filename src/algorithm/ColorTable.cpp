@@ -20,7 +20,7 @@ ColorTable::ColorTable(u32 width, u32 height, Color** data) {
     this->width = width;
     this->height = height;
     this->data = new Color*[height];
-    for range (y, height) {
+    for range(y, height) {
         this->data[y] = new Color[width];
     }
 
@@ -29,6 +29,22 @@ ColorTable::ColorTable(u32 width, u32 height, Color** data) {
             this->data[y][x] = data[y][x];
         }
     }
+}
+
+ColorTable::ColorTable(ColorTable* src) {
+    if (src == nullptr) {
+        throw std::invalid_argument("nullptr");
+    }
+
+    this->width = src->width;
+    this->height = src->height;
+
+    this->data = new Color*[height];
+    for range(y, this->height) {
+        this->data[y] = new Color[width];
+    }
+
+    src->CopyTable(this);
 }
 
 
