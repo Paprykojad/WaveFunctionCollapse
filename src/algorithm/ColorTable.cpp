@@ -1,8 +1,11 @@
 #include <exception>
+#include <raylib.h>
+#include <aliases.hpp>
+#include "ColorTable.hpp"
 
-#include "ColorTable.h"
 
 #include <stdexcept>
+
 
 ColorTable::ColorTable(u32 width, u32 height) {
     this->width = width;
@@ -13,15 +16,34 @@ ColorTable::ColorTable(u32 width, u32 height) {
     }
 }
 
+ColorTable::ColorTable(u32 width, u32 height, Color** data) {
+    this->width = width;
+    this->height = height;
+    this->data = new Color*[height];
+    for range (y, height) {
+        this->data[y] = new Color[width];
+    }
+
+    for range(y, height) {
+        for range(x, width) {
+            this->data[y][x] = data[y][x];
+        }
+    }
+}
+
 
 ColorTable::~ColorTable() {
     for (u32 i = 0; i < height; i++) {
-        free(data[i]);
+        if (data[i] != nullptr) {
+            free(data[i]);
+        }
     }
-    free(data);
+    if (data != nullptr) {
+        free(data);
+    }
 }
 
-void ColorTable::Copy(ColorTable *dest) {
+void ColorTable::CopyTable(ColorTable* dest) {
     if (dest == nullptr) {
         throw std::invalid_argument("nullptr");
     }
@@ -38,6 +60,10 @@ void ColorTable::Copy(ColorTable *dest) {
     if (dest->data != nullptr) {
         free(dest->data);
     }
+    dest->data = new Color*[height];
+    for range(i, height) {
+        dest->data[i] = new Color[width];
+    }
 
     for (u32 y = 0; y < this->height; y++) {
         for (u32 x = 0; x < this->width; x++) {
@@ -45,6 +71,15 @@ void ColorTable::Copy(ColorTable *dest) {
         }
     }
 }
+
+void ColorTable::GetData(Color** src) {
+    for range(y, this->height) {
+        for range(x, this->width) {
+            this->data[y][x] = src[y][x];
+        }
+    }
+}
+
 
 Color ColorTable::Get(u32 y, u32 x) {
     if (y >= this->height || x >= this->width) {

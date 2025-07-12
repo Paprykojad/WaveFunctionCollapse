@@ -11,7 +11,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
 
 add_executable(Program main.cpp
         ../algorithm/ColorTable.cpp
-        ../algorithm/ColorTable.h)
+)
 
 target_include_directories(Program PRIVATE
     ${CMAKE_HOME_DIRECTORY}/headers

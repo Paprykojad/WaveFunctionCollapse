@@ -11,11 +11,17 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
 
 add_library(WaveFunctionCollapse STATIC
         ColorTable.cpp
-        ColorTable.h)
-target_include_directories(WaveFunctionCollapse PRIVATE ${CMAKE_SOURCE_DIR}/headers)
+    )
 
-target_link_directories(Program PRIVATE
+target_include_directories(WaveFunctionCollapse PRIVATE
+        ${CMAKE_SOURCE_DIR}/headers
+)
+
+target_link_directories(WaveFunctionCollapse PRIVATE
         ${CMAKE_HOME_DIRECTORY}/dependencies/dynamic
         ${CMAKE_HOME_DIRECTORY}/dependencies/static
 )
 
+target_link_libraries(WaveFunctionCollapse PRIVATE
+        raylib
+)

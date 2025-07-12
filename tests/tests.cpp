@@ -1,8 +1,2 @@
-#include <iostream>
-#include <ostream>
-
-#include "ColorTableTests.hpp"
-
-int main() {
-    ColorTableTests();
-}
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#include <doctest.hpp>
