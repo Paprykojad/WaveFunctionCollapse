@@ -1,9 +1,9 @@
 #include <doctest.hpp>
 
 #include <aliases.hpp>
-#include <raylib.h>
 
 #include <algorithm/ColorTable.hpp>
+#include <algorithm/Color.hpp>
 
 #include <iostream>
 using std::cout;

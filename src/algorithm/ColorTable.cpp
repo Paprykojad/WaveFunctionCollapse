@@ -1,7 +1,7 @@
 #include <exception>
-#include <raylib.h>
 #include <aliases.hpp>
 #include "ColorTable.hpp"
+#include "Color.hpp"
 
 
 #include <stdexcept>
@@ -111,4 +111,21 @@ void ColorTable::Set(u32 y, u32 x, Color val) {
     }
 
     this->data[y][x] = val;
+}
+
+bool ColorTable::operator==(const ColorTable& other) const {
+    // compare dimensions
+    if (height != other.height || width != other.width) {
+        return false;
+    }
+
+    // compare every pixel
+    for (u32 y = 0; y < height; ++y) {
+        for (u32 x = 0; x < width; ++x) {
+            if (data[y][x] != other.data[y][x]) {
+                return false;
+            }
+        }
+    }
+    return true;
 }

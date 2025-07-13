@@ -16,6 +16,7 @@ enable_testing()
 add_executable(tests
         tests.cpp
         ColorTableTests.cpp
+        LearnerTests.cpp
 )
 
 target_include_directories(tests PRIVATE
