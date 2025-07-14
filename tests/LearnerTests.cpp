@@ -13,6 +13,8 @@ class LearnerFixture {
         Color** colors2;
         Color** colors3;
         Color** colors4;
+        Color** colors5; // Added for larger test cases
+        Color** colors6; // Added for larger test cases
 
         Color* cols;
 
@@ -32,49 +34,74 @@ class LearnerFixture {
                     (Color){100, 50, 50, 255},
             };
 
-            Color* c1 = new Color[]{
-                (Color){80, 80, 80, 255},
-                    (Color){200, 100, 100, 255},
-                    (Color){140, 140, 140, 255},
-            };
-
-            Color* c2 = new Color[]{
-                (Color){10, 20, 30, 255},
-                    (Color){20, 30, 40, 255},
-                    (Color){30, 40, 50, 255},
-            };
-
-            Color* c3 = new Color[]{
-                (Color){160, 160, 160, 255},
-                    (Color){100, 50, 50, 255},
-                    (Color){100, 50, 50, 255},
-            };
+            // c1 corresponds to cols[0] to cols[2]
+            // c2 corresponds to cols[3] to cols[5]
+            // c3 corresponds to cols[6] to cols[8]
 
             colors0 = new Color*[1];
-            colors0[0] = c1;
+            colors0[0] = &cols[0]; // Used to be c1
 
             colors = new Color*[2];
-            colors[0] = c1;
-            colors[1] = c2;
+            colors[0] = &cols[0]; // Used to be c1
+            colors[1] = &cols[3]; // Used to be c2
 
             colors2 = new Color*[2];
-            colors2[0] = c1;
-            colors2[1] = c1;
+            colors2[0] = &cols[0]; // Used to be c1
+            colors2[1] = &cols[0]; // Used to be c1
 
             colors3 = new Color*[3];
-            colors3[0] = c1;
-            colors3[1] = c1;
-            colors3[2] = c2;
+            colors3[0] = &cols[0]; // Used to be c1
+            colors3[1] = &cols[0]; // Used to be c1
+            colors3[2] = &cols[3]; // Used to be c2
 
             colors4 = new Color*[2];
-            colors4[0] = c1;
-            colors4[1] = c3;
+            colors4[0] = &cols[0]; // Used to be c1
+            colors4[1] = &cols[6]; // Used to be c3
+
+            // Define colors5 for a 4x4 grid (16 pixels)
+            // Pattern:
+            // cols[0] cols[1] cols[0] cols[1]
+            // cols[3] cols[4] cols[3] cols[4]
+            // cols[0] cols[1] cols[0] cols[1]
+            // cols[3] cols[4] cols[3] cols[4]
+            colors5 = new Color*[4];
+            colors5[0] = new Color[4]{cols[0], cols[1], cols[0], cols[1]};
+            colors5[1] = new Color[4]{cols[3], cols[4], cols[3], cols[4]};
+            colors5[2] = new Color[4]{cols[0], cols[1], cols[0], cols[1]};
+            colors5[3] = new Color[4]{cols[3], cols[4], cols[3], cols[4]};
+
+            // Define colors6 for a 3x3 grid (9 pixels) with alternating pattern
+            // Pattern:
+            // cols[0] cols[1] cols[0]
+            // cols[1] cols[0] cols[1]
+            // cols[0] cols[1] cols[0]
+            colors6 = new Color*[3];
+            colors6[0] = new Color[3]{cols[0], cols[1], cols[0]};
+            colors6[1] = new Color[3]{cols[1], cols[0], cols[1]};
+            colors6[2] = new Color[3]{cols[0], cols[1], cols[0]};
         }
 
         ~LearnerFixture() {
-            free(colors[0]);
-            free(colors[1]);
-            free(colors);
+            delete[] colors0;
+            delete[] colors;
+            delete[] colors2;
+            delete[] colors3;
+            delete[] colors4;
+
+            // Clean up colors5
+            delete[] colors5[0];
+            delete[] colors5[1];
+            delete[] colors5[2];
+            delete[] colors5[3];
+            delete[] colors5;
+
+            // Clean up colors6
+            delete[] colors6[0];
+            delete[] colors6[1];
+            delete[] colors6[2];
+            delete[] colors6;
+
+            delete[] cols;
         }
 };
 
@@ -361,5 +388,155 @@ TEST_SUITE("Learner tests") {
         // Stored in `direction[Bottom]`
         CHECK(l.colorCounts[color_200_100_100].direction[Bottom].size() == 1);
         CHECK(l.colorCounts[color_200_100_100].direction[Bottom][color_200_100_100] == 1); // From (1,1) to (0,1)
+    }
+
+    TEST_CASE_FIXTURE(LearnerFixture, "Testing colorCounts with a 4x4 repeating pattern") {
+    ColorTable ct(4, 4, colors5); // 4 wide, 4 high
+    Learner l(&ct);
+
+    Color color_80_80_80 = cols[0];   // Top-left block color
+    Color color_200_100_100 = cols[1]; // Its right neighbor
+    Color color_10_20_30 = cols[3];   // Its bottom neighbor
+    Color color_20_30_40 = cols[4];   // Diagonal neighbor from top-left block
+
+    // Test for color_80_80_80 (cols[0])
+    // Appears at (0,0), (0,2), (2,0), (2,2) - 4 instances
+    {
+        // Right neighbor is always cols[1]
+        CHECK(l.colorCounts[color_80_80_80].direction[Right].size() == 1);
+        CHECK(l.colorCounts[color_80_80_80].direction[Right][color_200_100_100] == 4);
+
+        // Bottom neighbor (stored in direction[Top]) is always cols[3]
+        CHECK(l.colorCounts[color_80_80_80].direction[Top].size() == 1);
+        CHECK(l.colorCounts[color_80_80_80].direction[Top][color_10_20_30] == 4);
+
+        // Left neighbor is cols[1] for instances at (0,2) and (2,2)
+        CHECK(l.colorCounts[color_80_80_80].direction[Left].size() == 1);
+        CHECK(l.colorCounts[color_80_80_80].direction[Left][color_200_100_100] == 2);
+
+        // Top neighbor (stored in direction[Bottom]) is cols[3] for instances at (2,0) and (2,2)
+        CHECK(l.colorCounts[color_80_80_80].direction[Bottom].size() == 1);
+        CHECK(l.colorCounts[color_80_80_80].direction[Bottom][color_10_20_30] == 2);
+    }
+
+    // Test for color_200_100_100 (cols[1])
+    // Appears at (0,1), (0,3), (2,1), (2,3) - 4 instances
+    {
+        // Left neighbor is always cols[0]
+        CHECK(l.colorCounts[color_200_100_100].direction[Left].size() == 1);
+        CHECK(l.colorCounts[color_200_100_100].direction[Left][color_80_80_80] == 4);
+
+        // Bottom neighbor (stored in direction[Top]) is always cols[4]
+        CHECK(l.colorCounts[color_200_100_100].direction[Top].size() == 1);
+        CHECK(l.colorCounts[color_200_100_100].direction[Top][color_20_30_40] == 4);
+
+        // Right neighbor is cols[0] for instances at (0,1) and (2,1)
+        CHECK(l.colorCounts[color_200_100_100].direction[Right].size() == 1);
+        CHECK(l.colorCounts[color_200_100_100].direction[Right][color_80_80_80] == 2);
+
+        // Top neighbor (stored in direction[Bottom]) is cols[4] for instances at (2,1) and (2,3)
+        CHECK(l.colorCounts[color_200_100_100].direction[Bottom].size() == 1);
+        CHECK(l.colorCounts[color_200_100_100].direction[Bottom][color_20_30_40] == 2);
+    }
+
+    // Test for color_10_20_30 (cols[3])
+    // Appears at (1,0), (1,2), (3,0), (3,2) - 4 instances
+    {
+        // Top neighbor (stored in direction[Bottom]) is always cols[0]
+        CHECK(l.colorCounts[color_10_20_30].direction[Bottom].size() == 1);
+        CHECK(l.colorCounts[color_10_20_30].direction[Bottom][color_80_80_80] == 4);
+
+        // Right neighbor is always cols[4]
+        CHECK(l.colorCounts[color_10_20_30].direction[Right].size() == 1);
+        CHECK(l.colorCounts[color_10_20_30].direction[Right][color_20_30_40] == 4);
+
+        // Left neighbor is cols[4] for instances at (1,2) and (3,2)
+        CHECK(l.colorCounts[color_10_20_30].direction[Left].size() == 1);
+        CHECK(l.colorCounts[color_10_20_30].direction[Left][color_20_30_40] == 2);
+
+        // Bottom neighbor (stored in direction[Top]) is cols[0] for instances at (1,0) and (1,2)
+        CHECK(l.colorCounts[color_10_20_30].direction[Top].size() == 1);
+        CHECK(l.colorCounts[color_10_20_30].direction[Top][color_80_80_80] == 2);
+    }
+
+    // Test for color_20_30_40 (cols[4])
+    // Appears at (1,1), (1,3), (3,1), (3,3) - 4 instances
+    {
+        // Left neighbor is always cols[3]
+        CHECK(l.colorCounts[color_20_30_40].direction[Left].size() == 1);
+        CHECK(l.colorCounts[color_20_30_40].direction[Left][color_10_20_30] == 4);
+
+        // Top neighbor (stored in direction[Bottom]) is always cols[1]
+        CHECK(l.colorCounts[color_20_30_40].direction[Bottom].size() == 1);
+        CHECK(l.colorCounts[color_20_30_40].direction[Bottom][color_200_100_100] == 4);
+
+        // Right neighbor is cols[3] for instances at (1,1) and (3,1)
+        CHECK(l.colorCounts[color_20_30_40].direction[Right].size() == 1);
+        CHECK(l.colorCounts[color_20_30_40].direction[Right][color_10_20_30] == 2);
+
+        // Bottom neighbor (stored in direction[Top]) is cols[1] for instances at (1,1) and (1,3)
+        CHECK(l.colorCounts[color_20_30_40].direction[Top].size() == 1);
+        CHECK(l.colorCounts[color_20_30_40].direction[Top][color_200_100_100] == 2);
+    }
+    }
+
+    TEST_CASE_FIXTURE(LearnerFixture, "Testing colorCounts with a 3x3 alternating pattern") {
+        ColorTable ct(3, 3, colors6); // 3 wide, 3 high
+        Learner l(&ct);
+
+        Color color_80_80_80 = cols[0];   // Center pixel color
+        Color color_200_100_100 = cols[1]; // Surrounding pixel color
+
+        // Test for color_80_80_80 (cols[0])
+        // Appears at (0,0), (0,2), (1,1), (2,0), (2,2) - 5 instances
+        {
+            // Right neighbors: (0,1) [cols[1]], (1,2) [cols[1]], (2,1) [cols[1]]
+            CHECK(l.colorCounts[color_80_80_80].direction[Right].size() == 1);
+            CHECK(l.colorCounts[color_80_80_80].direction[Right][color_200_100_100] == 3);
+
+            // Left neighbors: (0,1) [cols[1]], (1,0) [cols[1]], (2,1) [cols[1]]
+            CHECK(l.colorCounts[color_80_80_80].direction[Left].size() == 1);
+            CHECK(l.colorCounts[color_80_80_80].direction[Left][color_200_100_100] == 3);
+
+            // Bottom neighbors (stored in direction[Top]):
+            // From (0,0) -> (1,0) [cols[1]]
+            // From (0,2) -> (1,2) [cols[1]]
+            // From (1,1) -> (2,1) [cols[1]]
+            CHECK(l.colorCounts[color_80_80_80].direction[Top].size() == 1);
+            CHECK(l.colorCounts[color_80_80_80].direction[Top][color_200_100_100] == 3);
+
+            // Top neighbors (stored in direction[Bottom]):
+            // From (1,1) -> (0,1) [cols[1]]
+            // From (2,0) -> (1,0) [cols[1]]
+            // From (2,2) -> (1,2) [cols[1]]
+            CHECK(l.colorCounts[color_80_80_80].direction[Bottom].size() == 1);
+            CHECK(l.colorCounts[color_80_80_80].direction[Bottom][color_200_100_100] == 3);
+        }
+
+        // Test for color_200_100_100 (cols[1])
+        // Appears at (0,1), (1,0), (1,2), (2,1) - 4 instances
+        {
+            // Right neighbors: (0,2) [cols[0]], (1,1) [cols[0]], (2,2) [cols[0]]
+            CHECK(l.colorCounts[color_200_100_100].direction[Right].size() == 1);
+            CHECK(l.colorCounts[color_200_100_100].direction[Right][color_80_80_80] == 3);
+
+            // Left neighbors: (0,0) [cols[0]], (1,1) [cols[0]], (2,0) [cols[0]]
+            CHECK(l.colorCounts[color_200_100_100].direction[Left].size() == 1);
+            CHECK(l.colorCounts[color_200_100_100].direction[Left][color_80_80_80] == 3);
+
+            // Bottom neighbors (stored in direction[Top]):
+            // From (0,1) -> (1,1) [cols[0]]
+            // From (1,0) -> (2,0) [cols[0]]
+            // From (1,2) -> (2,2) [cols[0]]
+            CHECK(l.colorCounts[color_200_100_100].direction[Top].size() == 1);
+            CHECK(l.colorCounts[color_200_100_100].direction[Top][color_80_80_80] == 3);
+
+            // Top neighbors (stored in direction[Bottom]):
+            // From (1,0) -> (0,0) [cols[0]]
+            // From (1,2) -> (0,2) [cols[0]]
+            // From (2,1) -> (1,1) [cols[0]]
+            CHECK(l.colorCounts[color_200_100_100].direction[Bottom].size() == 1);
+            CHECK(l.colorCounts[color_200_100_100].direction[Bottom][color_80_80_80] == 3);
+        }
     }
 }
