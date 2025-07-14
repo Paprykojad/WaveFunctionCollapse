@@ -17,4 +17,6 @@ public:
 
     Color selectColor(i32 y, i32 x);
     void registerPixel(u32 y, u32 x);
+
+    
 };

@@ -17,6 +17,15 @@ ColorTable::ColorTable(u32 width, u32 height) {
 }
 
 ColorTable::ColorTable(u32 width, u32 height, Color** data) {
+    if (data == nullptr) {
+        throw std::invalid_argument("nullptr");
+    }
+    for range(i, height) {
+        if (data[i] == nullptr) {
+            throw std::invalid_argument("nullptr");
+        }
+    }
+
     this->width = width;
     this->height = height;
     this->data = new Color*[height];

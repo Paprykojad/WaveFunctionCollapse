@@ -1,0 +1,27 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Run Tests",
+			"type": "codelldb",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/tests/tests",
+			"args": [],
+			"stopOnEntry": false,
+			"cwd": "${workspaceFolder}",
+			"environment": [],
+			"console": "integratedTerminal"
+		},
+		{
+			"name": "Run GUI Program",
+			"type": "codelldb",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/src/gui/Program",
+			"args": [],
+			"stopOnEntry": false,
+			"cwd": "${workspaceFolder}",
+			"environment": [],
+			"console": "integratedTerminal"
+		}
+	]
+}
