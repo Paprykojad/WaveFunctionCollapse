@@ -20,3 +20,4 @@ struct ColorCounter {
 
     void addColor(Color col, u32 dir);
 };
+

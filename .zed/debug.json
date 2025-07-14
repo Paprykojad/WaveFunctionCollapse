@@ -1,9 +1,16 @@
 [
 	{
+			"adapter": "CodeLLDB",
+			"label": "Tests",
+			"request": "launch",
+			"program": "$ZED_WORKTREE_ROOT/build/tests/tests",
+			"cwd": "$ZED_WORKTREE_ROOT/build/tests"
+		},
+		{
 		"adapter": "CodeLLDB",
-		"label": "Tests",
+		"label": "Program",
 		"request": "launch",
-		"program": "$ZED_WORKTREE_ROOT/build/tests/tests",
-		"cwd": "$ZED_WORKTREE_ROOT"
+		"program": "$ZED_WORKTREE_ROOT/build/src/gui/Program",
+		"cwd": "$ZED_WORKTREE_ROOT/build/src/gui"
 	}
 ]

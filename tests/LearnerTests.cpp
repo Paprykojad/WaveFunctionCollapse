@@ -7,75 +7,75 @@
 #include "algorithm/Learner.hpp"
 
 class LearnerFixture {
-public:
-    Color** colors0;
-    Color** colors;
-    Color** colors2;
-    Color** colors3;
-    Color** colors4;
+    public:
+        Color** colors0;
+        Color** colors;
+        Color** colors2;
+        Color** colors3;
+        Color** colors4;
 
-    Color* cols;
+        Color* cols;
 
 
-    LearnerFixture() {
-        cols = new Color[]{
-            (Color){80, 80, 80, 255},
-            (Color){200, 100, 100, 255},
-            (Color){140, 140, 140, 255},
+        LearnerFixture() {
+            cols = new Color[]{
+                (Color){80, 80, 80, 255},
+                    (Color){200, 100, 100, 255},
+                    (Color){140, 140, 140, 255},
 
-            (Color){10, 20, 30, 255},
-            (Color){20, 30, 40, 255},
-            (Color){30, 40, 50, 255},
+                    (Color){10, 20, 30, 255},
+                    (Color){20, 30, 40, 255},
+                    (Color){30, 40, 50, 255},
 
-            (Color){160, 160, 160, 255},
-            (Color){100, 50, 50, 255},
-            (Color){100, 50, 50, 255},
-        };
+                    (Color){160, 160, 160, 255},
+                    (Color){100, 50, 50, 255},
+                    (Color){100, 50, 50, 255},
+            };
 
-        Color* c1 = new Color[]{
-            (Color){80, 80, 80, 255},
-            (Color){200, 100, 100, 255},
-            (Color){140, 140, 140, 255},
-        };
+            Color* c1 = new Color[]{
+                (Color){80, 80, 80, 255},
+                    (Color){200, 100, 100, 255},
+                    (Color){140, 140, 140, 255},
+            };
 
-        Color* c2 = new Color[]{
-            (Color){10, 20, 30, 255},
-            (Color){20, 30, 40, 255},
-            (Color){30, 40, 50, 255},
-        };
+            Color* c2 = new Color[]{
+                (Color){10, 20, 30, 255},
+                    (Color){20, 30, 40, 255},
+                    (Color){30, 40, 50, 255},
+            };
 
-        Color* c3 = new Color[]{
-            (Color){160, 160, 160, 255},
-            (Color){100, 50, 50, 255},
-            (Color){100, 50, 50, 255},
-        };
+            Color* c3 = new Color[]{
+                (Color){160, 160, 160, 255},
+                    (Color){100, 50, 50, 255},
+                    (Color){100, 50, 50, 255},
+            };
 
-        colors0 = new Color*[1];
-        colors0[0] = c1;
+            colors0 = new Color*[1];
+            colors0[0] = c1;
 
-        colors = new Color*[2];
-        colors[0] = c1;
-        colors[1] = c2;
+            colors = new Color*[2];
+            colors[0] = c1;
+            colors[1] = c2;
 
-        colors2 = new Color*[2];
-        colors2[0] = c1;
-        colors2[1] = c1;
+            colors2 = new Color*[2];
+            colors2[0] = c1;
+            colors2[1] = c1;
 
-        colors3 = new Color*[3];
-        colors3[0] = c1;
-        colors3[1] = c1;
-        colors3[2] = c2;
+            colors3 = new Color*[3];
+            colors3[0] = c1;
+            colors3[1] = c1;
+            colors3[2] = c2;
 
-        colors4 = new Color*[2];
-        colors4[0] = c1;
-        colors4[1] = c3;
-    }
+            colors4 = new Color*[2];
+            colors4[0] = c1;
+            colors4[1] = c3;
+        }
 
-    ~LearnerFixture() {
-        free(colors[0]);
-        free(colors[1]);
-        free(colors);
-    }
+        ~LearnerFixture() {
+            free(colors[0]);
+            free(colors[1]);
+            free(colors);
+        }
 };
 
 void t() {
@@ -165,8 +165,201 @@ TEST_SUITE("Learner tests") {
 
             CHECK(l.colorCounts[cols[2]].direction[Left][cols[1]] == 1);
         }
+    }
 
+    TEST_CASE_FIXTURE(LearnerFixture, "Testing selectColor boundary checks") {
+        ColorTable ct(3, 2, colors); // 3 wide, 2 high (colors is c1 followed by c2)
+        Learner l(&ct);
 
+        // Valid access
+        CHECK(l.selectColor(0, 0) == colors[0][0]);
+        CHECK(l.selectColor(1, 2) == colors[1][2]); // Bottom-right pixel
 
+        // Invalid Y coordinates
+        CHECK_THROWS_AS(l.selectColor(ct.height, 0), std::invalid_argument);
+        CHECK_THROWS_AS(l.selectColor(ct.height + 5, 0), std::invalid_argument);
+        CHECK_THROWS_AS(l.selectColor(-1, 0), std::invalid_argument); // Negative Y
+
+        // Invalid X coordinates
+        CHECK_THROWS_AS(l.selectColor(0, ct.width), std::invalid_argument);
+        CHECK_THROWS_AS(l.selectColor(0, ct.width + 5), std::invalid_argument);
+        CHECK_THROWS_AS(l.selectColor(0, -1), std::invalid_argument); // Negative X
+
+        // Both invalid
+        CHECK_THROWS_AS(l.selectColor(ct.height, ct.width), std::invalid_argument);
+        CHECK_THROWS_AS(l.selectColor(-1, -1), std::invalid_argument);
+    }
+
+    TEST_CASE_FIXTURE(LearnerFixture, "Testing colorCounts for top-left corner pixel") {
+        ColorTable ct(3, 2, colors); // 3 wide, 2 high
+        Learner l(&ct);
+
+        Color topLeftColor = colors[0][0]; // Pixel at (0,0) in the grid
+        Color actualRightNeighbor = colors[0][1]; // Pixel at (0,1)
+        Color actualBottomNeighbor = colors[1][0]; // Pixel at (1,0)
+
+        // Learner's `direction[Top]` stores actual BOTTOM neighbors
+        CHECK(l.colorCounts[topLeftColor].direction[Top].size() == 1);
+        CHECK(l.colorCounts[topLeftColor].direction[Top][actualBottomNeighbor] == 1);
+
+        // Learner's `direction[Right]` stores actual RIGHT neighbors
+        CHECK(l.colorCounts[topLeftColor].direction[Right].size() == 1);
+        CHECK(l.colorCounts[topLeftColor].direction[Right][actualRightNeighbor] == 1);
+
+        // No actual TOP neighbor, Learner's `direction[Bottom]` should be empty
+        CHECK(l.colorCounts[topLeftColor].direction[Bottom].empty());
+        // No actual LEFT neighbor, Learner's `direction[Left]` should be empty
+        CHECK(l.colorCounts[topLeftColor].direction[Left].empty());
+    }
+
+    TEST_CASE_FIXTURE(LearnerFixture, "Testing colorCounts for top-right corner pixel") {
+        ColorTable ct(3, 2, colors); // 3 wide, 2 high
+        Learner l(&ct);
+
+        Color topRightColor = colors[0][2]; // Pixel at (0,2) in the grid
+        Color actualLeftNeighbor = colors[0][1]; // Pixel at (0,1)
+        Color actualBottomNeighbor = colors[1][2]; // Pixel at (1,2)
+
+        // Learner's `direction[Top]` stores actual BOTTOM neighbors
+        CHECK(l.colorCounts[topRightColor].direction[Top].size() == 1);
+        CHECK(l.colorCounts[topRightColor].direction[Top][actualBottomNeighbor] == 1);
+
+        // No actual RIGHT neighbor, Learner's `direction[Right]` should be empty
+        CHECK(l.colorCounts[topRightColor].direction[Right].empty());
+
+        // No actual TOP neighbor, Learner's `direction[Bottom]` should be empty
+        CHECK(l.colorCounts[topRightColor].direction[Bottom].empty());
+
+        // Learner's `direction[Left]` stores actual LEFT neighbors
+        CHECK(l.colorCounts[topRightColor].direction[Left].size() == 1);
+        CHECK(l.colorCounts[topRightColor].direction[Left][actualLeftNeighbor] == 1);
+    }
+
+    TEST_CASE_FIXTURE(LearnerFixture, "Testing colorCounts for bottom-left corner pixel") {
+        ColorTable ct(3, 2, colors); // 3 wide, 2 high
+        Learner l(&ct);
+
+        Color bottomLeftColor = colors[1][0]; // Pixel at (1,0) in the grid
+        Color actualTopNeighbor = colors[0][0]; // Pixel at (0,0)
+        Color actualRightNeighbor = colors[1][1]; // Pixel at (1,1)
+
+        // No actual BOTTOM neighbor, Learner's `direction[Top]` should be empty
+        CHECK(l.colorCounts[bottomLeftColor].direction[Top].empty());
+
+        // Learner's `direction[Right]` stores actual RIGHT neighbors
+        CHECK(l.colorCounts[bottomLeftColor].direction[Right].size() == 1);
+        CHECK(l.colorCounts[bottomLeftColor].direction[Right][actualRightNeighbor] == 1);
+
+        // Learner's `direction[Bottom]` stores actual TOP neighbors
+        CHECK(l.colorCounts[bottomLeftColor].direction[Bottom].size() == 1);
+        CHECK(l.colorCounts[bottomLeftColor].direction[Bottom][actualTopNeighbor] == 1);
+
+        // No actual LEFT neighbor, Learner's `direction[Left]` should be empty
+        CHECK(l.colorCounts[bottomLeftColor].direction[Left].empty());
+    }
+
+    TEST_CASE_FIXTURE(LearnerFixture, "Testing colorCounts for bottom-right corner pixel") {
+        ColorTable ct(3, 2, colors); // 3 wide, 2 high
+        Learner l(&ct);
+
+        Color bottomRightColor = colors[1][2]; // Pixel at (1,2) in the grid
+        Color actualTopNeighbor = colors[0][2]; // Pixel at (0,2)
+        Color actualLeftNeighbor = colors[1][1]; // Pixel at (1,1)
+
+        // No actual BOTTOM neighbor, Learner's `direction[Top]` should be empty
+        CHECK(l.colorCounts[bottomRightColor].direction[Top].empty());
+
+        // No actual RIGHT neighbor, Learner's `direction[Right]` should be empty
+        CHECK(l.colorCounts[bottomRightColor].direction[Right].empty());
+
+        // Learner's `direction[Bottom]` stores actual TOP neighbors
+        CHECK(l.colorCounts[bottomRightColor].direction[Bottom].size() == 1);
+        CHECK(l.colorCounts[bottomRightColor].direction[Bottom][actualTopNeighbor] == 1);
+
+        // Learner's `direction[Left]` stores actual LEFT neighbors
+        CHECK(l.colorCounts[bottomRightColor].direction[Left].size() == 1);
+        CHECK(l.colorCounts[bottomRightColor].direction[Left][actualLeftNeighbor] == 1);
+    }
+
+    TEST_CASE_FIXTURE(LearnerFixture, "Testing colorCounts for a middle-row pixel") {
+        ColorTable ct(3, 2, colors); // 3 wide, 2 high
+        Learner l(&ct);
+
+        Color middleColor = colors[0][1]; // Pixel at (0,1) in the grid
+        Color actualLeftNeighbor = colors[0][0]; // Pixel at (0,0)
+        Color actualRightNeighbor = colors[0][2]; // Pixel at (0,2)
+        Color actualBottomNeighbor = colors[1][1]; // Pixel at (1,1)
+
+        // Learner's `direction[Top]` stores actual BOTTOM neighbors
+        CHECK(l.colorCounts[middleColor].direction[Top].size() == 1);
+        CHECK(l.colorCounts[middleColor].direction[Top][actualBottomNeighbor] == 1);
+
+        // Learner's `direction[Right]` stores actual RIGHT neighbors
+        CHECK(l.colorCounts[middleColor].direction[Right].size() == 1);
+        CHECK(l.colorCounts[middleColor].direction[Right][actualRightNeighbor] == 1);
+
+        // No actual TOP neighbor, Learner's `direction[Bottom]` should be empty
+        CHECK(l.colorCounts[middleColor].direction[Bottom].empty());
+
+        // Learner's `direction[Left]` stores actual LEFT neighbors
+        CHECK(l.colorCounts[middleColor].direction[Left].size() == 1);
+        CHECK(l.colorCounts[middleColor].direction[Left][actualLeftNeighbor] == 1);
+    }
+
+    TEST_CASE_FIXTURE(LearnerFixture, "Testing colorCounts with duplicate colors and complex relationships") {
+        ColorTable ct(3, 3, colors3); // 3 wide, 3 high (first two rows are c1, last row is c2)
+        Learner l(&ct);
+
+        // Aliases for specific colors from the 'cols' array for clarity
+        Color color_80_80_80 = cols[0];   // c1[0]
+        Color color_200_100_100 = cols[1]; // c1[1]
+        Color color_140_140_140 = cols[2]; // c1[2]
+        Color color_10_20_30 = cols[3];   // c2[0]
+        Color color_20_30_40 = cols[4];   // c2[1]
+
+        // --- Test for color_80_80_80 (cols[0]), appearing at (0,0) and (1,0) ---
+        // (0,0) has Right neighbor (0,1) = c1[1]; Bottom neighbor (1,0) = c1[0]
+        // (1,0) has Right neighbor (1,1) = c1[1]; Top neighbor (0,0) = c1[0]; Bottom neighbor (2,0) = c2[0]
+
+        // Actual Right Neighbors: (0,1) = c1[1] for (0,0); (1,1) = c1[1] for (1,0)
+        CHECK(l.colorCounts[color_80_80_80].direction[Right].size() == 1);
+        CHECK(l.colorCounts[color_80_80_80].direction[Right][color_200_100_100] == 2);
+
+        // Actual Bottom Neighbors: (1,0) = c1[0] for (0,0); (2,0) = c2[0] for (1,0)
+        // Stored in `direction[Top]` due to Learner's mapping
+        CHECK(l.colorCounts[color_80_80_80].direction[Top].size() == 2);
+        CHECK(l.colorCounts[color_80_80_80].direction[Top][color_80_80_80] == 1); // From (0,0) to (1,0)
+        CHECK(l.colorCounts[color_80_80_80].direction[Top][color_10_20_30] == 1); // From (1,0) to (2,0)
+
+        // Actual Top Neighbors: (0,0) = c1[0] for (1,0)
+        // Stored in `direction[Bottom]` due to Learner's mapping
+        CHECK(l.colorCounts[color_80_80_80].direction[Bottom].size() == 1);
+        CHECK(l.colorCounts[color_80_80_80].direction[Bottom][color_80_80_80] == 1); // From (1,0) to (0,0)
+
+        // Actual Left Neighbors: None for (0,0) or (1,0)
+        CHECK(l.colorCounts[color_80_80_80].direction[Left].empty());
+
+        // --- Test for color_200_100_100 (cols[1]), appearing at (0,1) and (1,1) ---
+        // (0,1) has Left=(0,0)=c1[0]; Right=(0,2)=c1[2]; Bottom=(1,1)=c1[1]
+        // (1,1) has Left=(1,0)=c1[0]; Right=(1,2)=c1[2]; Top=(0,1)=c1[1]; Bottom=(2,1)=c2[1]
+
+        // Actual Left Neighbors: (0,0)=c1[0] for (0,1); (1,0)=c1[0] for (1,1)
+        CHECK(l.colorCounts[color_200_100_100].direction[Left].size() == 1);
+        CHECK(l.colorCounts[color_200_100_100].direction[Left][color_80_80_80] == 2);
+
+        // Actual Right Neighbors: (0,2)=c1[2] for (0,1); (1,2)=c1[2] for (1,1)
+        CHECK(l.colorCounts[color_200_100_100].direction[Right].size() == 1);
+        CHECK(l.colorCounts[color_200_100_100].direction[Right][color_140_140_140] == 2);
+
+        // Actual Bottom Neighbors: (1,1)=c1[1] for (0,1); (2,1)=c2[1] for (1,1)
+        // Stored in `direction[Top]`
+        CHECK(l.colorCounts[color_200_100_100].direction[Top].size() == 2);
+        CHECK(l.colorCounts[color_200_100_100].direction[Top][color_200_100_100] == 1); // From (0,1) to (1,1)
+        CHECK(l.colorCounts[color_200_100_100].direction[Top][color_20_30_40] == 1); // From (1,1) to (2,1)
+
+        // Actual Top Neighbors: (0,1)=c1[1] for (1,1)
+        // Stored in `direction[Bottom]`
+        CHECK(l.colorCounts[color_200_100_100].direction[Bottom].size() == 1);
+        CHECK(l.colorCounts[color_200_100_100].direction[Bottom][color_200_100_100] == 1); // From (1,1) to (0,1)
     }
 }
