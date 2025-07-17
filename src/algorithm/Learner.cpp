@@ -1,4 +1,5 @@
 #include "Learner.hpp"
+#include "ColorCounter.hpp"
 
 #include <stdexcept>
 

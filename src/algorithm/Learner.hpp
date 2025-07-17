@@ -3,20 +3,22 @@
 #include <aliases.hpp>
 
 #include "ColorTable.hpp"
-#include "Color.hpp"
 #include "ColorCounter.hpp"
 
+struct colorAmountPair {
+	Color color;
+	u32 amount;
+};
+
 class Learner {
-public:
-    ColorTable data;
+	public:
+	ColorTable data;
 
-    std::unordered_map<Color, ColorCounter> colorCounts;
-    std::unordered_map<Color, u32> coloredPixelsCount;
+	std::unordered_map<Color, ColorCounter> colorCounts;
+	std::unordered_map<Color, u32> coloredPixelsCount;
 
-    Learner(ColorTable* data);
+	Learner(ColorTable* data);
 
-    Color selectColor(i32 y, i32 x);
-    void registerPixel(u32 y, u32 x);
-
-    
+	Color selectColor(i32 y, i32 x);
+	void registerPixel(u32 y, u32 x);
 };

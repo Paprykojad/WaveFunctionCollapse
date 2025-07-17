@@ -17,6 +17,7 @@ add_executable(tests
         tests.cpp
         ColorTableTests.cpp
         LearnerTests.cpp
+        RandomMachineTests.cpp
 )
 
 target_include_directories(tests PRIVATE
