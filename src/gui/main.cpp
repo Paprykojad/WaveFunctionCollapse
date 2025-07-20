@@ -4,29 +4,41 @@
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 
+#include "Container.hpp"
+#include "GroupBoxObject.hpp"
+
 int main()
 {
-	u32 BoxesW = 10;
-	u32 BoxesH = 10;
+    std::string title = "Wave Function Collapse";
+	u32 margin = 50;
 
-	u32 pixelsPerBox = 100;
+    // u32 width = 1000;
+    // u32 height = 1000;
+    u32 width = 600;
+    u32 height = 600;
 
-	u32 paddingW = 50;
-	u32 paddingH = 50;
+    Container root(0, 0, width, height, margin, margin);
+    GroupBoxObject rootObject(root.CanvasDimensions(), title);
 
-	InitWindow(pixelsPerBox*BoxesW+paddingW, pixelsPerBox*BoxesH+paddingH, "raygui - controls test suite");
+    // Rectangle rect = (Rectangle){
+    //     .x = (f32)50,
+    //     .y = (f32)50,
+    //     .width = (f32)width-100,
+    //     .height = (f32)height-100
+    // };
+
+	InitWindow(width, height, title.c_str());
+	// InitWindow(pixelsPerBox*BoxesW+padding, pixelsPerBox*BoxesH+padding, "raygui - controls test suite");
 	SetTargetFPS(60);
 
 	while (!WindowShouldClose())
 	{
-		// Draw
-		//----------------------------------------------------------------------------------
 		BeginDrawing();
 		ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
 
+        rootObject.draw();
 
-		Rectangle rect(paddingW/2,paddingH/2, pixelsPerBox*BoxesW, pixelsPerBox*BoxesH);
-		GuiGroupBox(rect, "Draw Pixels");
+        // GuiGroupBox(rect, title.c_str());
 
 		EndDrawing();
 	}

@@ -13,6 +13,7 @@ add_executable(Program
         main.cpp
         Container.cpp
         UiObject.cpp
+        GroupBoxObject.cpp
 )
 
 target_include_directories(Program PRIVATE
