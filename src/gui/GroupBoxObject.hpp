@@ -1,7 +1,7 @@
 #pragma once
 
 #include "UiObject.hpp"
-#include <raylib.h>
+#include <external/raylib.h>
 #include <string>
 
 class GroupBoxObject : UiObject {

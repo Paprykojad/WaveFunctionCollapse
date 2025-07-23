@@ -22,8 +22,8 @@ class UiObject {
 
         const u32 maxAmountOfChildren = 2;
 
-        std::array<u32, 2> getMarginLengthSum();
-        std::array<u32, 2> getChildWidth();
+        std::array<u32, 2> getMarginDimentionsSum(u32 childrenAmount);
+        std::array<u32, 2> getChildDimentions(u32 childrenAmount);
 
         Mode mode;
         f32 proportions;
@@ -33,6 +33,8 @@ class UiObject {
 
         UiObject(std::array<u32, 4> arr);
         UiObject(std::array<u32, 4> arr, Mode mode, f32 proportions = 0.5f);
+
+        void resizeAll();
 
     public:
         virtual ~UiObject();

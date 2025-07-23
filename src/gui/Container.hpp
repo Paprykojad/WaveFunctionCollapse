@@ -7,13 +7,12 @@
 #include <array>
 
 class Container {
-    private:
+
+    public:
 
         u32 posX, posY;
         u32 width, height;
         u32 marginX, marginY;
-
-    public:
 
         Container( u32 posX, u32 posY, u32 width, u32 height, u32 marginX, u32 marginY );
         Container(std::array<u32, 6> arr);

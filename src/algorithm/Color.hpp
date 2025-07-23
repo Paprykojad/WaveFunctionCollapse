@@ -10,7 +10,7 @@
 //     unsigned char a; // Color alpha value
 // } Color;
 
-#include <raylib.h>
+#include <external/raylib.h>
 
 bool operator==(const Color& lhs, const Color& rhs) noexcept;
 

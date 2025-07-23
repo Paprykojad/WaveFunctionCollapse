@@ -1,7 +1,7 @@
 #include "GroupBoxObject.hpp"
 #include "gui/UiObject.hpp"
-#include "raylib.h"
-#include "raygui.h"
+#include "external/raylib.h"
+#include "external/raygui.h"
 
 
 GroupBoxObject::GroupBoxObject(Container* container, std::string text) : UiObject(container) {

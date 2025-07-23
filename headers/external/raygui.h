@@ -123,7 +123,7 @@
 *           or source files without problems. But only ONE file should hold the implementation.
 *
 *       #define RAYGUI_STANDALONE
-*           Avoid raylib.h header inclusion in this file. Data types defined on raylib are defined
+*           Avoid external/raylib.h header inclusion in this file. Data types defined on raylib are defined
 *           internally in the library and input management and drawing functions must be provided by
 *           the user (check library implementation for further details).
 *
@@ -344,7 +344,7 @@
 #define RAYGUI_VERSION  "5.0-dev"
 
 #if !defined(RAYGUI_STANDALONE)
-    #include "raylib.h"
+    #include "external/raylib.h"
 #endif
 
 // Function specifiers in case library is build/used as a shared library (Windows)

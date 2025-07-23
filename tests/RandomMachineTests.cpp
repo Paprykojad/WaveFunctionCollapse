@@ -1,8 +1,8 @@
-#include <doctest.hpp>
+#include <external/doctest.hpp>
 #include "algorithm/RandomMachine.hpp"
 #include "algorithm/ColorTable.hpp"
 
-// Helper to compare colors in doctest since doctest doesn't know about Color
+// Helper to compare colors in external/doctest since external/doctest doesn't know about Color
 // and the existing operator== is in the global namespace but might not be found
 // by ADL depending on the context. Explicitly providing it here is safer.
 // bool operator==(const Color& lhs, const Color& rhs) {

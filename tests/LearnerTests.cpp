@@ -1,4 +1,4 @@
-#include <doctest.hpp>
+#include <external/doctest.hpp>
 #include <iostream>
 #include <stdexcept>
 #include <algorithm/Color.hpp>

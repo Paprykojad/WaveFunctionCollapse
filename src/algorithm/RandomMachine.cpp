@@ -5,7 +5,7 @@
 
 #include "RandomMachine.hpp"
 #include "Learner.hpp"
-#include "raylib.h"
+#include "external/raylib.h"
 
 
 RandomMachine::RandomMachine(ColorTable* data) : Learner(data), generator(std::chrono::high_resolution_clock::now().time_since_epoch().count()), dist(1, this->data.width*this->data.height) {

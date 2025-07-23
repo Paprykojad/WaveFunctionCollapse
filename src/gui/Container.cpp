@@ -24,12 +24,10 @@ Container::Container(std::array<u32, 6> arr) {
 
 std::array<u32, 4> Container::CanvasDimensions() {
     std::array<u32, 4> val = {
-        posX + marginX/2,           // startX
-        posY + marginY/2,           // startY
-        // posX + width - marginX/2,   // lengthX
-        // posY + height - marginY/2   // lengthY
-        width - marginX,
-        height - marginY
+        posX + marginX,           // startX
+        posY + marginY,           // startY
+        width - marginX*2,        // lengthX
+        height - marginY*2        // lengthY
     };
     return val;
 }
