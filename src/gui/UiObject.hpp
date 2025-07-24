@@ -5,7 +5,6 @@
 
 #include <aliases.hpp>
 #include <vector>
-#include <memory> // Required for std::unique_ptr
 
 enum Mode {
     Vertical,
@@ -34,6 +33,10 @@ class UiObject {
 
 	public:
 	std::vector<UiObject*> children; // Changed to store unique_ptrs
+	f32 splitRatio = 0.5f;
+	void resize(u32 idx);
+	void resizeAll(f32 ratio);
+
     void setValues(ObjectData data);
 	UiObject(ObjectData data, Mode mode);
 	ObjectData getObjectData();

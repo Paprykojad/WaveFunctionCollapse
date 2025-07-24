@@ -30,25 +30,23 @@ ObjectData UiObject::createObjectData(u32 amountOfChildren, u32 childNumber) {
 	u32 marginY;
 
 	if (this->mode == Horizontal) {
-		width = (this->width - (amountOfChildren-1)*this->marginX)/amountOfChildren;
-		height = this->height;
+		width = (this->width - (amountOfChildren+1)*this->marginX)/amountOfChildren;
+		height = this->height - 2*this->marginY;
 
-        posX = this->posX + childNumber * (width + this->marginX);
-        posY = this->posY;
+        posX = this->posX + childNumber * (width + this->marginX) + this->marginX;
+        posY = this->posY + this->marginY;
 
         marginX = this->marginX;
         marginY = this->marginY;
-
 	} else {
-		width = this->width;
-		height = (this->height - (amountOfChildren-1)*this->marginY)/amountOfChildren;
+		width = this->width - 2*this->marginX;
+		height = (this->height - (amountOfChildren+1)*this->marginY)/amountOfChildren;
 
-        posY = this->posY + childNumber * (width + this->marginY);
-        posX = this->posX;
+        posY = this->posY + childNumber * (height + this->marginY) + this->marginY;
+        posX = this->posX + this->marginX;
 
         marginX = this->marginX;
         marginY = this->marginY;
-
 	}
 
 	return (ObjectData){
@@ -76,6 +74,52 @@ void UiObject::drawAll() {
 	this->draw();
 	for range(i, children.size()) {
 		children[i]->drawAll();
+	}
+}
+
+void UiObject::resize(u32 idx) {
+	if (this->mode == Horizontal) {
+
+		u32 noMargin = (this->width - (1+children.size())*this->marginX);
+		children[idx]->width = noMargin - (idx == 0 ? splitRatio : 1.0f - splitRatio)*noMargin;
+		children[idx]->height = this->height - children.size()*this->marginY;
+
+		u32 sum = 0;
+		for range(i, idx) {
+			sum += children[i]->width;
+			sum += children[i]->marginX;
+		}
+		sum += marginX;
+
+		children[idx]->posX = this->posX + sum;
+		children[idx]->posY = this->posY + marginY;
+
+	} else {
+
+		u32 noMargin = (this->height - (1+children.size())*this->marginY);
+		children[idx]->height = noMargin - (idx == 0 ? splitRatio : 1.0f - splitRatio)*noMargin;
+		children[idx]->width = this->width - children.size()*this->marginX;
+
+		u32 sum = 0;
+		for range(i, idx) {
+			sum += children[i]->height;
+			sum += children[i]->marginY;
+		}
+		sum += marginY;
+		children[idx]->posY = this->posY + sum;
+		children[idx]->posX = this->posX + marginX;
+	}
+}
+
+void UiObject::resizeAll(f32 ratio) {
+	this->splitRatio = ratio;
+
+	for range(i, children.size()) {
+		resize(i);
+	}
+
+	for range(i, children.size()) {
+		children[i]->resizeAll(children[i]->splitRatio);
 	}
 }
 

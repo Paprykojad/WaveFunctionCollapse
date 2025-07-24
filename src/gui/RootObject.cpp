@@ -4,10 +4,12 @@
 
 RootObject::RootObject(u32 screenW, u32 screenH, u32 marginX, u32 marginY) :
     UiObject((ObjectData){
-        .posX = marginX,
-        .posY = marginY,
-        .width = screenW - 2*marginX,
-        .height = screenH - 2*marginY,
+        // .posX = marginX + marginX,
+        // .posY = marginY + marginY,
+        .posX = 0,
+        .posY = 0,
+        .width = screenW,
+        .height = screenH,
         .marginX = marginX,
         .marginY = marginY
         }, Horizontal) {}
