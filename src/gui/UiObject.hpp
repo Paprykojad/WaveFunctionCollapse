@@ -3,9 +3,9 @@
 //
 #pragma once
 
-#include "Container.hpp"
+#include <aliases.hpp>
 #include <vector>
-#include <tuple>
+#include <memory> // Required for std::unique_ptr
 
 enum Mode {
     Vertical,
@@ -13,36 +13,34 @@ enum Mode {
     NoChildren
 };
 
+struct ObjectData {
+	u32 posX, posY;
+	u32 width, height;
+	u32 marginX, marginY;
+};
+
 class UiObject {
-    protected:
-        u32 posX, posY;
-        u32 width, height;
+	private:
+	Mode mode;
+	u32 childrenMax = 2;
 
-        Container* myContainer;
+	ObjectData createObjectData(u32 amountOfChildren, u32 childNumber);
 
-        const u32 maxAmountOfChildren = 2;
+	protected:
+	u32 posX, posY;
+	u32 width, height;
+	u32 marginX, marginY;
 
-        std::array<u32, 2> getMarginDimentionsSum(u32 childrenAmount);
-        std::array<u32, 2> getChildDimentions(u32 childrenAmount);
 
-        Mode mode;
-        f32 proportions;
+	public:
+	std::vector<UiObject*> children; // Changed to store unique_ptrs
+    void setValues(ObjectData data);
+	UiObject(ObjectData data, Mode mode);
+	ObjectData getObjectData();
 
-    private:
-        std::vector< std::tuple<Container, UiObject*> > childContainers;
+    void addChild(UiObject* object); // Changed signature to accept unique_ptr
 
-        UiObject(std::array<u32, 4> arr);
-        UiObject(std::array<u32, 4> arr, Mode mode, f32 proportions = 0.5f);
+	virtual ~UiObject();
+	virtual void draw();
 
-        void resizeAll();
-
-    public:
-        virtual ~UiObject();
-
-        UiObject(Container* container);
-        UiObject(Container* container, Mode mode, f32 proportions);
-
-        void AddChild(UiObject* object);
-
-        virtual void draw() = 0;
 };

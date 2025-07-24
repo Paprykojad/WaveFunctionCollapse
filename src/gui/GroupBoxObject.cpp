@@ -1,14 +1,15 @@
 #include "GroupBoxObject.hpp"
 #include "gui/UiObject.hpp"
-#include "external/raylib.h"
-#include "external/raygui.h"
+#include <aliases.hpp>
 
+#include <external/raylib.h>
+#include <external/raygui.h>
 
-GroupBoxObject::GroupBoxObject(Container* container, std::string text) : UiObject(container) {
+GroupBoxObject::GroupBoxObject(ObjectData data, Mode mode, std::string text) : UiObject(data, mode) {
     this->text = text;
 }
 
-GroupBoxObject::GroupBoxObject(Container* container, std::string text, Mode mode, f32 proportions) : UiObject(container, mode, proportions) {
+GroupBoxObject::GroupBoxObject(Mode mode, std::string text) : UiObject((ObjectData){}, mode) {
     this->text = text;
 }
 

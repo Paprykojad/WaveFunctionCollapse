@@ -4,14 +4,12 @@
 #include <external/raylib.h>
 #include <string>
 
-class GroupBoxObject : UiObject {
+class GroupBoxObject : public UiObject {
     private:
         std::string text;
 
     public:
-        GroupBoxObject(Container* container, std::string text);
-        GroupBoxObject(Container* container, std::string text, Mode mode, f32 proportions = 0.5f);
-
+        GroupBoxObject(ObjectData data, Mode mode, std::string text);
+        GroupBoxObject(Mode mode, std::string text);
         void draw() override;
 };
-

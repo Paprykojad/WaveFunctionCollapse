@@ -1,34 +1,35 @@
 #include <aliases.hpp>
 #include "external/raylib.h"
+#include <string>
+
+#include <gui/UiObject.hpp>
+#include <gui/RootObject.hpp>
+#include <gui/GroupBoxObject.hpp>
 
 #define RAYGUI_IMPLEMENTATION
 #include "external/raygui.h"
 
-#include "Container.hpp"
-#include "GroupBoxObject.hpp"
 
 int main()
 {
     std::string title = "Wave Function Collapse";
 	u32 margin = 20;
 
-    // u32 width = 1000;
-    // u32 height = 1000;
     u32 width = 600;
     u32 height = 600;
 
-    Container root(0, 0, width, height, margin, margin);
-    GroupBoxObject rootObject(&root, title);
+    // Container root(0, 0, width, height, margin, margin);
+    // GroupBoxObject rootObject(&root, title);
 
-    // Rectangle rect = (Rectangle){
-    //     .x = (f32)50,
-    //     .y = (f32)50,
-    //     .width = (f32)width-100,
-    //     .height = (f32)height-100
-    // };
+    RootObject root(width, height, margin, margin);
+    GroupBoxObject* gr = new GroupBoxObject(Horizontal, title);
+    GroupBoxObject* gr2 = new GroupBoxObject(Horizontal, title);
+    GroupBoxObject* gr3 = new GroupBoxObject(Horizontal, title);
+    root.addChild(gr);
+    gr->addChild(gr2);
+    gr->addChild(gr3);
 
 	InitWindow(width, height, title.c_str());
-	// InitWindow(pixelsPerBox*BoxesW+padding, pixelsPerBox*BoxesH+padding, "external/raygui - controls test suite");
 	SetTargetFPS(60);
 
 	while (!WindowShouldClose())
@@ -36,7 +37,10 @@ int main()
 		BeginDrawing();
 		ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
 
-        rootObject.draw();
+        root.children[0]->draw();
+        for range(i, root.children[0]->children.size()) {
+        	root.children[0]->children[i]->draw();
+        }
 
         // GuiGroupBox(rect, title.c_str());
 
