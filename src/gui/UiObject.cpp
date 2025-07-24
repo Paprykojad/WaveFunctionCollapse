@@ -30,7 +30,7 @@ ObjectData UiObject::createObjectData(u32 amountOfChildren, u32 childNumber) {
 	u32 marginY;
 
 	if (this->mode == Horizontal) {
-		width = this->width - (amountOfChildren-1)*this->marginX;
+		width = (this->width - (amountOfChildren-1)*this->marginX)/amountOfChildren;
 		height = this->height;
 
         posX = this->posX + childNumber * (width + this->marginX);
@@ -41,7 +41,7 @@ ObjectData UiObject::createObjectData(u32 amountOfChildren, u32 childNumber) {
 
 	} else {
 		width = this->width;
-		height = this->height - (amountOfChildren-1)*this->marginY;
+		height = (this->height - (amountOfChildren-1)*this->marginY)/amountOfChildren;
 
         posY = this->posY + childNumber * (width + this->marginY);
         posX = this->posX;
@@ -70,6 +70,13 @@ void UiObject::addChild(UiObject* object) {
     for range(i, children.size()) {
         children[i]->setValues(createObjectData(children.size(), i));
     }
+}
+
+void UiObject::drawAll() {
+	this->draw();
+	for range(i, children.size()) {
+		children[i]->drawAll();
+	}
 }
 
 void UiObject::draw() {

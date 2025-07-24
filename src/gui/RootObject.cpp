@@ -2,7 +2,7 @@
 #include "gui/UiObject.hpp"
 
 
-RootObject::RootObject(u32 screenW, u32 screenH, u32 marginX, u32 marginY) : 
+RootObject::RootObject(u32 screenW, u32 screenH, u32 marginX, u32 marginY) :
     UiObject((ObjectData){
         .posX = marginX,
         .posY = marginY,
@@ -11,3 +11,5 @@ RootObject::RootObject(u32 screenW, u32 screenH, u32 marginX, u32 marginY) :
         .marginX = marginX,
         .marginY = marginY
         }, Horizontal) {}
+
+void RootObject::draw() {}

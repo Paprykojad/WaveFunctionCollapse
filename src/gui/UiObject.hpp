@@ -39,6 +39,7 @@ class UiObject {
 	ObjectData getObjectData();
 
     void addChild(UiObject* object); // Changed signature to accept unique_ptr
+    void drawAll();
 
 	virtual ~UiObject();
 	virtual void draw();

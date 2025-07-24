@@ -15,8 +15,8 @@ int main()
     std::string title = "Wave Function Collapse";
 	u32 margin = 20;
 
-    u32 width = 600;
-    u32 height = 600;
+    u32 width = 1200;
+    u32 height = 1200;
 
     // Container root(0, 0, width, height, margin, margin);
     // GroupBoxObject rootObject(&root, title);
@@ -24,10 +24,14 @@ int main()
     RootObject root(width, height, margin, margin);
     GroupBoxObject* gr = new GroupBoxObject(Horizontal, title);
     GroupBoxObject* gr2 = new GroupBoxObject(Horizontal, title);
-    GroupBoxObject* gr3 = new GroupBoxObject(Horizontal, title);
+    GroupBoxObject* gr3 = new GroupBoxObject(Vertical, title);
+    GroupBoxObject* gr4 = new GroupBoxObject(Horizontal, title);
+    GroupBoxObject* gr5 = new GroupBoxObject(Horizontal, title);
     root.addChild(gr);
     gr->addChild(gr2);
     gr->addChild(gr3);
+    gr3->addChild(gr4);
+    gr3->addChild(gr5);
 
 	InitWindow(width, height, title.c_str());
 	SetTargetFPS(60);
@@ -37,12 +41,8 @@ int main()
 		BeginDrawing();
 		ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
 
-        root.children[0]->draw();
-        for range(i, root.children[0]->children.size()) {
-        	root.children[0]->children[i]->draw();
-        }
-
-        // GuiGroupBox(rect, title.c_str());
+		root.drawAll();
+		// GuiGroupBox((Rectangle){}, "karaluch");
 
 		EndDrawing();
 	}
