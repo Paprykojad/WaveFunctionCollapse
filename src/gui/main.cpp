@@ -53,6 +53,7 @@ int main()
 	SetTargetFPS(60);
 
 	f32 dir = 1.0f;
+	f32 val = 0;
 	while (!WindowShouldClose())
 	{
 		BeginDrawing();
@@ -66,7 +67,15 @@ int main()
 		gr->resizeAll(gr->splitRatio += speed*dir);
 		cout << gr->splitRatio << endl;
 
+
 		// GuiGroupBox((Rectangle){}, "karaluch");
+		GuiSlider((Rectangle){
+			.x = 100.0f,
+			.y = 100.0f,
+			.width = 300.0f,
+			.height = 50.0f,
+		}, "Min", "Max", &val, 0.0f, 1.0f);
+		cout << "val: " << val << endl;
 
 		EndDrawing();
 	}
