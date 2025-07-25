@@ -1,5 +1,6 @@
 #include <aliases.hpp>
 #include "external/raylib.h"
+#include "gui/BlankObject.hpp"
 #include <string>
 #include <iostream>
 

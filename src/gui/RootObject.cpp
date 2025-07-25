@@ -10,8 +10,8 @@ RootObject::RootObject(u32 screenW, u32 screenH, u32 marginX, u32 marginY) :
             .posY = 0,
             .width = screenW,
             .height = screenH,
-            .marginX = marginX,
-            .marginY = marginY
+            .inheritableMarginX = marginX,
+            .inheritableMarginY = marginY,
             }, Horizontal) {
         this->splitRatio = 0.0f;
         this->childrenMax = 1;

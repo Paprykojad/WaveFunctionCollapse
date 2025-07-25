@@ -7,8 +7,10 @@ void UiObject::setValues(ObjectData data) {
 	this->posY = data.posY;
 	this->width = data.width;
 	this->height = data.height;
-	this->marginX = data.marginX;
-	this->marginY = data.marginY;
+	this->inheritableMarginX = data.inheritableMarginX;
+	this->inheritableMarginY = data.inheritableMarginY;
+	this->marginX = this->inheritableMarginX;
+	this->marginY = this->inheritableMarginY;
 }
 
 UiObject::UiObject(ObjectData data, Mode mode = NoChildren) {
@@ -26,27 +28,27 @@ ObjectData UiObject::createObjectData(u32 amountOfChildren, u32 childNumber) {
 	u32 posY;
 	u32 width;
 	u32 height;
-	u32 marginX;
-	u32 marginY;
+	u32 inheritableMarginX;
+	u32 inheritableMarginY;
 
 	if (this->mode == Horizontal) {
-		width = (this->width - (amountOfChildren+1)*this->marginX)/amountOfChildren;
-		height = this->height - 2*this->marginY;
+		width = (this->width - (amountOfChildren+1)*this->inheritableMarginX)/amountOfChildren;
+		height = this->height - 2*this->inheritableMarginY;
 
-        posX = this->posX + childNumber * (width + this->marginX) + this->marginX;
-        posY = this->posY + this->marginY;
+        posX = this->posX + childNumber * (width + this->inheritableMarginX) + this->inheritableMarginX;
+        posY = this->posY + this->inheritableMarginY;
 
-        marginX = this->marginX;
-        marginY = this->marginY;
+        inheritableMarginX = this->inheritableMarginX;
+        inheritableMarginY = this->inheritableMarginY;
 	} else {
-		width = this->width - 2*this->marginX;
-		height = (this->height - (amountOfChildren+1)*this->marginY)/amountOfChildren;
+		width = this->width - 2*this->inheritableMarginX;
+		height = (this->height - (amountOfChildren+1)*this->inheritableMarginY)/amountOfChildren;
 
-        posY = this->posY + childNumber * (height + this->marginY) + this->marginY;
-        posX = this->posX + this->marginX;
+        posY = this->posY + childNumber * (height + this->inheritableMarginY) + this->inheritableMarginY;
+        posX = this->posX + this->inheritableMarginX;
 
-        marginX = this->marginX;
-        marginY = this->marginY;
+        inheritableMarginX = this->inheritableMarginX;
+        inheritableMarginY = this->inheritableMarginY;
 	}
 
 	return (ObjectData){
@@ -54,8 +56,8 @@ ObjectData UiObject::createObjectData(u32 amountOfChildren, u32 childNumber) {
         .posY = posY,
         .width = width,
         .height = height,
-        .marginX = marginX,
-        .marginY = marginY,
+        .inheritableMarginX = inheritableMarginX,
+        .inheritableMarginY = inheritableMarginY,
     };
 }
 

@@ -4,6 +4,7 @@
 #pragma once
 
 #include <aliases.hpp>
+#include <aliases.hpp>
 #include <vector>
 
 enum Mode {
@@ -15,7 +16,7 @@ enum Mode {
 struct ObjectData {
 	u32 posX, posY;
 	u32 width, height;
-	u32 marginX, marginY;
+	u32 inheritableMarginX, inheritableMarginY;
 };
 
 class UiObject {
@@ -28,6 +29,7 @@ class UiObject {
 	u32 posX, posY;
 	u32 width, height;
 	u32 marginX, marginY;
+	u32 inheritableMarginX, inheritableMarginY;
 	u32 childrenMax = 2;
 
 
