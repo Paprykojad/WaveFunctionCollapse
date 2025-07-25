@@ -78,11 +78,16 @@ void UiObject::drawAll() {
 }
 
 void UiObject::resize(u32 idx) {
+	if (this->mode == NoChildren) {
+		throw std::logic_error("shouldn't have children");
+	}
+
+
 	if (this->mode == Horizontal) {
 
 		u32 noMargin = (this->width - (1+children.size())*this->marginX);
 		children[idx]->width = noMargin - (idx == 0 ? splitRatio : 1.0f - splitRatio)*noMargin;
-		children[idx]->height = this->height - children.size()*this->marginY;
+		children[idx]->height = this->height - 2*this->marginY;
 
 		u32 sum = 0;
 		for range(i, idx) {
@@ -98,7 +103,7 @@ void UiObject::resize(u32 idx) {
 
 		u32 noMargin = (this->height - (1+children.size())*this->marginY);
 		children[idx]->height = noMargin - (idx == 0 ? splitRatio : 1.0f - splitRatio)*noMargin;
-		children[idx]->width = this->width - children.size()*this->marginX;
+		children[idx]->width = this->width - 2*this->marginX;
 
 		u32 sum = 0;
 		for range(i, idx) {

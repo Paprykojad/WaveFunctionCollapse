@@ -15,6 +15,7 @@ add_executable(Program
         GroupBoxObject.cpp
         RootObject.cpp
         SliderObject.cpp
+        BlankObject.cpp
 )
 
 target_include_directories(Program PRIVATE

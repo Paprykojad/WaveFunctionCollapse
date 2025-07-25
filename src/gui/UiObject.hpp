@@ -21,7 +21,6 @@ struct ObjectData {
 class UiObject {
 	private:
 	Mode mode;
-	u32 childrenMax = 2;
 
 	ObjectData createObjectData(u32 amountOfChildren, u32 childNumber);
 
@@ -29,6 +28,7 @@ class UiObject {
 	u32 posX, posY;
 	u32 width, height;
 	u32 marginX, marginY;
+	u32 childrenMax = 2;
 
 
 	public:
