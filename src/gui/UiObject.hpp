@@ -16,7 +16,7 @@ enum Mode {
 struct ObjectData {
 	u32 posX, posY;
 	u32 width, height;
-	u32 inheritableMarginX, inheritableMarginY;
+	u32 marginX, marginY;
 };
 
 class UiObject {

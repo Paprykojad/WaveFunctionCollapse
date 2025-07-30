@@ -15,7 +15,6 @@ add_library(WaveFunctionCollapse STATIC
         RandomMachine.cpp
         Color.cpp
         ColorCounter.cpp
-
 )
 
 target_include_directories(WaveFunctionCollapse PRIVATE

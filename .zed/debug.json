@@ -10,7 +10,7 @@
 		"adapter": "CodeLLDB",
 		"label": "Program",
 		"request": "launch",
-		"program": "$ZED_WORKTREE_ROOT/build/src/gui/Program",
-		"cwd": "$ZED_WORKTREE_ROOT/build/src/gui",
+		"program": "$ZED_WORKTREE_ROOT/build/src/program/Program",
+		"cwd": "$ZED_WORKTREE_ROOT/build/src/program",
 	}
 ]
