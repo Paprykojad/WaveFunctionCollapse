@@ -38,9 +38,7 @@ int main()
     GroupBoxObject* gr3 = new GroupBoxObject(Horizontal, "gr3");
     GroupBoxObject* gr4 = new GroupBoxObject(Horizontal, "gr4");
 
-    // ColorPickerObject* cp1 = new ColorPickerObject("cp1");
-    // ColorPickerObject* cp2 = new ColorPickerObject("cp2");
-    GroupBoxObject* gr5 = new GroupBoxObject(Horizontal, "gr5");
+    ColorPickerObject* cp1 = new ColorPickerObject("cp1");
 
     root.addChild(gr1);
     gr1->addChild(gr2);
@@ -48,9 +46,7 @@ int main()
     gr1->resizeAll(0.1f);
     gr2->addChild(gr3);
     gr2->addChild(gr4);
-    // gr4->addChild(cp1);
-    gr4->addChild(gr5);
-    // gr4->addChild(cp2);
+    gr4->addChild(cp1);
 
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);    // Window configuration flags

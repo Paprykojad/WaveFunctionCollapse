@@ -1,5 +1,6 @@
 #include "Learner.hpp"
 #include "ColorCounter.hpp"
+#include "ColorTable.hpp"
 
 #include <stdexcept>
 
@@ -42,11 +43,10 @@ void Learner::registerPixel(u32 y, u32 x) {
 }
 
 
-Learner::Learner(ColorTable* data): data(data) {
+Learner::Learner(ColorTable* data) : data(data) {
     for range(y, data->height) {
         for range (x, data->width) {
             registerPixel(y, x);
-
             if (!coloredPixelsCount.contains(data->Get(y, x))) {
                 coloredPixelsCount[data->Get(y, x)] = 1;
             } else {
