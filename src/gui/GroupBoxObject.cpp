@@ -14,11 +14,13 @@ GroupBoxObject::GroupBoxObject(Mode mode, std::string text) : UiObject((ObjectDa
 }
 
 void GroupBoxObject::draw() {
-    Rectangle rect = (Rectangle){
-        .x = (f32)this->posX,
-        .y = (f32)this->posY,
-        .width = (f32)this->width,
-        .height = (f32)this->height,
-    };
-    GuiGroupBox(rect, this->text.c_str());
+    if (this->width > 0 && this->height > 0) {
+        Rectangle rect = (Rectangle){
+            .x = (f32) this->posX,
+            .y = (f32) this->posY,
+            .width = (f32) this->width,
+            .height = (f32) this->height,
+        };
+        GuiGroupBox(rect, this->text.c_str());
+    }
 }

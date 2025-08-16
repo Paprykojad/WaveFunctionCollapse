@@ -8,11 +8,12 @@
 
 class ColorPickerObject : public UiObject {
     private:
-        Color color;
         str text;
 
     public:
-        ColorPickerObject(ObjectData object, str text);
-        ColorPickerObject(str text);
+        Color *color;
+
+        ColorPickerObject(ObjectData object, str text, Color *color);
+        ColorPickerObject(str text, Color *color);
         void draw() override;
 };

@@ -27,7 +27,7 @@ class UiObject {
 
 	protected:
 	u32 posX, posY;
-	u32 width, height;
+	i32 width, height;
 	u32 marginX, marginY;
 	u32 inheritableMarginX, inheritableMarginY;
 	u32 childrenMax = 2;

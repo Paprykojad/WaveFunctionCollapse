@@ -11,6 +11,7 @@ using std::endl;
 #include <gui/GroupBoxObject.hpp>
 #include <gui/SliderObject.hpp>
 #include <gui/ColorPickerObject.hpp>
+#include <gui/PixelDisplayerObject.hpp>
 
 #define RAYGUI_IMPLEMENTATION
 #include "external/raygui.h"
@@ -35,35 +36,68 @@ int main()
     true
     );
 
-    GroupBoxObject* gr3 = new GroupBoxObject(Horizontal, "gr3");
-    GroupBoxObject* gr4 = new GroupBoxObject(Horizontal, "gr4");
+    // GroupBoxObject* gr3 = new GroupBoxObject(Horizontal, "gr3");
+	u32 pxAmount = 50;
+	ColorTable ctb(pxAmount, pxAmount);
+	for range(y, pxAmount) {
+		for range(x, pxAmount) {
+			 Color col = (Color){
+			 	.r = (unsigned char)(y*10),
+				 .g = (unsigned char)(x*10),
+				 .b = (unsigned char)((x+y)*10 % 255),
+				 .a = (unsigned char)((x*y)*10 % 255),
+			 };
+			 ctb.Set(y, x, col);
+		}
+    }
+    PixelDisplayerObject *pixel_displayer_object = new PixelDisplayerObject(&ctb, true);
 
-    ColorPickerObject* cp1 = new ColorPickerObject("cp1");
+    GroupBoxObject *gr4 = new GroupBoxObject(Horizontal, "gr4");
+
+    ColorPickerObject *cp1 = new ColorPickerObject("cp1", &(pixel_displayer_object->drawColor));
 
     root.addChild(gr1);
     gr1->addChild(gr2);
     gr1->addChild(slider);
     gr1->resizeAll(0.1f);
-    gr2->addChild(gr3);
+    gr2->addChild(pixel_displayer_object);
     gr2->addChild(gr4);
     gr4->addChild(cp1);
 
 
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);    // Window configuration flags
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE); // Window configuration flags
     InitWindow(width, height, title.c_str());
-	SetTargetFPS(144);
+    SetTargetFPS(144);
 
-	while (!WindowShouldClose())
-	{
-		BeginDrawing();
-		ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
-
-        root.updateSize();
-        root.drawAll();
-
-		EndDrawing();
+	//
+	// for range(y, 10) {
+	// 	for range(x, 10) {
+	// 		ctb.data[y][x].r += y;
+	// 		ctb.data[y][x].g += x;
+	// 		ctb.data[y][x].b += x+y;
+	// 		ctb.data[y][x].a += x*y;
+	// 	}
+	// }
+	//
+	for range(y, 10) {
+		for range(x, 10) {
+			ctb.data[y][x].r +=40;
+			ctb.data[y][x].g +=40;
+			ctb.data[y][x].b +=40;
+			ctb.data[y][x].a +=40;
+		}
 	}
 
-	CloseWindow();
-	return 0;
+	while (!WindowShouldClose()) {
+	    BeginDrawing();
+	    ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
+
+	    root.updateSize();
+	    root.drawAll();
+
+	    EndDrawing();
+    }
+
+    CloseWindow();
+    return 0;
 }

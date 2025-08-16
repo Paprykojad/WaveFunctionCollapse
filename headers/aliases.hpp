@@ -21,3 +21,7 @@ typedef double    f64;
 typedef std::string str;
 
 #define range(NAME, VAL) (u32 NAME = 0; NAME < VAL; NAME++)
+
+#define local_persist static
+#define global_var static
+#define local_func static

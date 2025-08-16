@@ -15,6 +15,7 @@ add_library(Gui STATIC
         RootObject.cpp
         SliderObject.cpp
         ColorPickerObject.cpp
+        PixelDisplayObject.cpp
 )
 
 target_include_directories(Gui PRIVATE
