@@ -1,12 +1,17 @@
 [
 	{
-			"adapter": "CodeLLDB",
-			"label": "Tests",
-			"request": "launch",
-			"program": "$ZED_WORKTREE_ROOT/build/tests/tests",
-			"cwd": "$ZED_WORKTREE_ROOT/build/tests"
-		},
-		{
+		"adapter": "CodeLLDB",
+		"label": "Tests",
+		// "build": {
+		// 	"command": "./run"
+		// 	// "args": ["-j8"],
+		// 	// "cwd": "$ZED_WORKTREE_ROOT/build/"
+		// },
+		"request": "launch",
+		"program": "$ZED_WORKTREE_ROOT/build/tests/tests",
+		"cwd": "$ZED_WORKTREE_ROOT/build/tests"
+	},
+	{
 		"adapter": "CodeLLDB",
 		"label": "Program",
 		"request": "launch",

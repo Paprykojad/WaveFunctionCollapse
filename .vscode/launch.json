@@ -16,7 +16,7 @@
 			"name": "Run GUI Program",
 			"type": "codelldb",
 			"request": "launch",
-			"program": "${workspaceFolder}/build/src/gui/Program",
+			"program": "${workspaceFolder}/build/src/program/Program",
 			"args": [],
 			"stopOnEntry": false,
 			"cwd": "${workspaceFolder}",

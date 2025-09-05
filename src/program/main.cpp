@@ -36,8 +36,7 @@ int main()
     true
     );
 
-    // GroupBoxObject* gr3 = new GroupBoxObject(Horizontal, "gr3");
-	u32 pxAmount = 50;
+	u32 pxAmount = 40;
 	ColorTable ctb(pxAmount, pxAmount);
 	for range(y, pxAmount) {
 		for range(x, pxAmount) {
@@ -67,20 +66,11 @@ int main()
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE); // Window configuration flags
     InitWindow(width, height, title.c_str());
+    // SetExitKey(KEY_NULL);
     SetTargetFPS(144);
 
-	//
-	// for range(y, 10) {
-	// 	for range(x, 10) {
-	// 		ctb.data[y][x].r += y;
-	// 		ctb.data[y][x].g += x;
-	// 		ctb.data[y][x].b += x+y;
-	// 		ctb.data[y][x].a += x*y;
-	// 	}
-	// }
-	//
-	for range(y, 10) {
-		for range(x, 10) {
+	for range(y, pxAmount) {
+		for range(x, pxAmount) {
 			ctb.data[y][x].r +=40;
 			ctb.data[y][x].g +=40;
 			ctb.data[y][x].b +=40;
